@@ -1,0 +1,10 @@
+node_modules
+npm-debug.log
+.env
+backend/platzi/node_modules
+backend/udemy/node_modules
+backend/platzi/.env
+backend/udemy/.env
+kubernetes
+Dockerfile
+.dockerignore
