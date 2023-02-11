@@ -4,6 +4,7 @@ const { getAll, searchCourses, getCoursesByRating, coursesByCategory, coursesByD
 
 const platziUrl = process.env.PLATZI_URL
 const udemyUrl = process.env.UDEMY_URL
+const courseraUrl = process.env.COURSERA_URL
 
 router.get('/', (req, res) => res.json({ message: 'Api Working!' }))
 
@@ -12,7 +13,7 @@ router.get('/allCourses', async (req, res) => {
 
   allCourses = [...allCourses, ...await getAll(platziUrl)]
   allCourses = [...allCourses, ...await getAll(udemyUrl)]
-  //allCourses = [...allCourses, ...await getAll('http://localhost:3500/courses')]
+  allCourses = [...allCourses, ...await getAll(courseraUrl)]
 
   res.json(allCourses)
 })
@@ -24,7 +25,7 @@ router.get('/searchCourses/:word', async (req, res) => {
 
   allCourses = [...allCourses, ...await searchCourses(platziUrl, searchWord)];
   allCourses = [...allCourses, ...await searchCourses(udemyUrl, searchWord)];
-  // allCourses = [...allCourses, ...await searchCourses('http://localhost:3500/courses', searchWord)];
+  allCourses = [...allCourses, ...await searchCourses(courseraUrl, searchWord)];
 
 
   res.json(allCourses)
@@ -36,7 +37,7 @@ router.get('/getCoursesByRating/:rating', async (req, res) => {
 
   coursesByRating = [...coursesByRating, ...await getCoursesByRating(platziUrl, rating)]
   coursesByRating = [...coursesByRating, ...await getCoursesByRating(udemyUrl, rating)]
-  // coursesByRating = [...coursesByRating, ...await getCoursesByRating(platziUrl, rating)]
+  coursesByRating = [...coursesByRating, ...await getCoursesByRating(courseraUrl, rating)]
 
   res.json(coursesByRating)
 })
@@ -47,7 +48,7 @@ router.get('/coursesByCategory/:category', async (req, res) => {
 
   allCourses = [...allCourses, await coursesByCategory(platziUrl, category)]
   allCourses = [...allCourses, await coursesByCategory(udemyUrl, category)]
-  // allCourses = [...allCourses, await coursesByCategory(platziUrl, category)]
+  allCourses = [...allCourses, await coursesByCategory(courseraUrl, category)]
 
   res.json(allCourses)
 })
@@ -58,7 +59,7 @@ router.get('/coursesByDifficulty/:difficulty', async (req, res) => {
 
   allCourses = [...allCourses, ...await coursesByDifficulty(platziUrl, difficulty)]
   allCourses = [...allCourses, ...await coursesByDifficulty(udemyUrl, difficulty)]
-  // allCourses = [...allCourses, ...await coursesByDifficulty(platziUrl, difficulty)]
+  allCourses = [...allCourses, ...await coursesByDifficulty(courseraUrl, difficulty)]
 
   res.json(allCourses)
 })
