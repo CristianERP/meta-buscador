@@ -1,14 +1,12 @@
 const { Router } = require('express');
 const router = Router();
 
-const pool = require('../databases/mariadb');
+const conn = require('../databases/mariadb');
 
 router.get('/', (req, res) => res.json({ message: 'Api Working!' }));
 
 router.get('/products', async (req, res) => {
     try {
-        // get connection
-        const conn = await pool.getConnection();
 
         // create new query
         const query = 'select * from products';
@@ -27,8 +25,8 @@ router.get('/products', async (req, res) => {
 router.post('/newproduct', async (req, res) => {
     console.log(req.body);
 
-    // get connection
-    const conn = await pool.getConnection();
+    // // get connection
+    // const conn = await pool.getConnection();
 
     // create new query
     const query = 'INSERT INTO products VALUE (?)';
@@ -48,8 +46,8 @@ router.post('/newproduct', async (req, res) => {
 //Proyecto cursos
 router.get('/courses', async (req, res) => {
     try {
-        // get connection
-        const conn = await pool.getConnection();
+        // // get connection
+        // const conn = await pool.getConnection();
 
         // create new query
         const query = 'select * from courses';
@@ -69,8 +67,8 @@ router.post('/addcursos', async (req, res) => {
     console.log(req.body);
     const { titulo, descripcion, precio, link } = req.body;
 
-    // get connection
-    const conn = await pool.getConnection();
+    // // get connection
+    // const conn = await pool.getConnection();
 
     // create new query
     const query = 'INSERT INTO cursos VALUES (?,?,?,?)';

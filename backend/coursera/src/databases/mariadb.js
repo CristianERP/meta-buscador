@@ -8,14 +8,13 @@ const pool = mariadb.createPool({
     database: process.env.MARIADB_DB
 });
 
-async function getConnection() {
-    try {
-        const connection = await pool.getConnection();
-        console.log("Mariadb Connected")
-        return connection;
-    } catch (error) {
-        console.log(error);
+pool.getConnection((err) => {
+    if (err) {
+        console.error('Error de conexión: ' + err.stack)
+        return
     }
-};
+    console.log('Mariadb Connected')
+})
 
-module.exports = { getConnection };
+
+module.exports = pool;
