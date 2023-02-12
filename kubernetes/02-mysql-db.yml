@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-courses-deployment
+  labels:
+    app: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-courses
+  template:
+    metadata:
+      labels:
+        app: mysql-courses
+    spec:
+      containers:
+      - name: mysqldb
+        image: mysql:8.0.27
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+          - name: mysql-init
+            mountPath: /docker-entrypoint-initdb.d
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: password
+      volumes:
+        - name: mysql-init
+          configMap:
+            name: mysql-courses-init
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-courses-service
+spec:
+  type: ClusterIP
+  selector:
+    app: mysql-courses
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-courses-init
+data:
+  mysql-init.sql: |
+    CREATE DATABASE udemy_db;
+    USE udemy_db;
+
+    CREATE TABLE IF NOT EXISTS courses(
+      id INT AUTO_INCREMENT,
+      titulo VARCHAR(100),
+      url VARCHAR(5000),
+      proveedor VARCHAR(100),
+      habilidades VARCHAR(5000),
+      rating DECIMAL(2,1),
+      resenias VARCHAR(100),
+      imagen VARCHAR(1000),
+      PRIMARY KEY (id)
+    );
+
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Javascript for Beginners", "https://www.udemy.com/course/beginning-javascript/", "Udemy", "Learn javascript online and supercharge your web design with this Javascript for beginners training course.", "4.4", "(1,4k reseñas)", "https://img-c.udemycdn.com/course/240x135/8324_fa84_13.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("1 Hour JavaScript", "https://www.udemy.com/course/1-hour-javascript/", "Udemy", "Learn how to code in JavaScript in 1 hour. This class is set up for complete beginners!", "4.4", "(1,9k reseñas)", "https://img-c.udemycdn.com/course/240x135/63612_8797_5.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("JavaScript: Understanding the Weird Parts", "https://www.udemy.com/course/understand-javascript/", "Udemy", "An advanced JavaScript course for everyone! Scope, closures, prototypes, 'this', build your own framework, and more.", "4.8", "(46,1k reseñas)", "https://img-c.udemycdn.com/course/240x135/364426_2991_6.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Modern React with Redux [2023 Update]", "https://www.udemy.com/course/react-redux/", "Udemy", "Master React and Redux Toolkit. Includes RTK Query, tons of custom hooks, and more! Course 100% Updated November 2022", "4.7", "(78,7k reseñas)", "https://img-c.udemycdn.com/course/240x135/705264_caa9_13.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Advanced React and Redux", "https://www.udemy.com/course/react-redux-tutorial/", "Udemy", "Walkthroughs on advanced React v16.6.3 and Redux v4.0.0 - Authentication, Testing, Middlewares, HOC's, and Deployment", "4.4", "(10,7k reseñas)", "https://img-c.udemycdn.com/course/240x135/781532_8b4d_6.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("React JS Web Development - The Essentials Bootcamp", "https://www.udemy.com/course/react-js-and-redux-mastering-web-apps", "Udemy", "Updated for 2022-23: React.js essentials bootcamp - React Core, Router, Redux, Hooks, in-depth JS, + detailed guides!", "4.5", "(5,5k reseñas)", "https://img-c.udemycdn.com/course/240x135/1078522_f455_3.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Learn and Understand NodeJS", "https://www.udemy.com/course/understand-nodejs/", "Udemy", "Dive deep under the hood of NodeJS. Learn V8, Express, the MEAN stack, core Javascript concepts, and more.", "4.5", "(27,8k reseñas)", "https://img-c.udemycdn.com/course/240x135/461160_8d87_6.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Node.js for Beginners - Become a Node js Developer + Project", "https://www.udemy.com/course/nodejs-for-beginners-become-a-nodejs-developer/", "Udemy", "Build an Amazing CMS system - Using Express + MongoDB + Bootstrap - Handlebars + Authentication + AJAX + Deployment", "4.4", "(1,6k reseñas)", "https://img-c.udemycdn.com/course/240x135/606096_3182.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("The Complete Node.js Developer Course (3rd Edition)", "https://www.udemy.com/course/the-complete-nodejs-developer-course-2/", "Udemy", "Learn Node.js by building real-world applications with Node JS, Express, MongoDB, Jest, and more!", "4.6", "(68,3k reseñas)", "https://img-c.udemycdn.com/course/240x135/606096_3182.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Learn Python: The Complete Python Programming Course", "https://www.udemy.com/course/pythonforbeginners/", "Udemy", "Learn A-Z everything about Python, from the basics, to advanced topics like Python GUI, Python Data Analysis, and more!", "4.3", "(4,2k reseñas)", "https://img-c.udemycdn.com/course/240x135/394676_ce3d_5.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Learning Python for Data Analysis and Visualization Ver 1", "https://www.udemy.com/course/learning-python-for-data-analysis-and-visualization/", "Udemy", "Learn python and how to use it to analyze,visualize and present data. Includes tons of sample code and hours of video!", "4.2", "(18,6k reseñas)", "https://img-c.udemycdn.com/course/240x135/396876_cc92_7.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Learn Python: Python for Beginners", "https://www.udemy.com/course/learn-python/", "Udemy", "Python introduction for beginners. Learn complete Python from scratch!", "4.5", "(2,8k reseñas)", "https://img-c.udemycdn.com/course/240x135/426570_1b91_3.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Deep Learning Prerequisites: Linear Regression in Python", "https://www.udemy.com/course/data-science-linear-regression-in-python/", "Udemy", "Data science, machine learning, and artificial intelligence in Python for students and professionals", "4.5", "(5,6k reseñas)", "https://img-c.udemycdn.com/course/240x135/556954_8e95_2.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("[2022] Machine Learning and Deep Learning Bootcamp in Python", "https://www.udemy.com/course/introduction-to-machine-learning-in-python/", "Udemy", "Machine Learning, Neural Networks, Computer Vision, Deep Learning and Reinforcement Learning in Keras and TensorFlow", "4.4", "(1,1k reseñas)", "https://img-c.udemycdn.com/course/240x135/617930_44e3_2.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Machine Learning, Data Science and Deep Learning with Python", "https://www.udemy.com/course/data-science-and-machine-learning-with-python-hands-on/", "Udemy", "Complete hands-on machine learning tutorial with data science, Tensorflow, artificial intelligence, and neural networks", "4.5", "(28,2k reseñas)", "https://img-c.udemycdn.com/course/240x135/671576_a272_4.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Flutter & Dart - The Complete Flutter App Development Course", "https://www.udemy.com/course/flutter-dart-the-complete-flutter-app-development-course/", "Udemy", "Build Flutter iOS and Android Apps with a Single Codebase: Learn Google's Flutter Mobile Development Framework & Dart", "4.3", "(4,9k reseñas)", "https://img-c.udemycdn.com/course/240x135/1575278_a828_6.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Flutter - Beginners Course", "https://www.udemy.com/course/flutters-beginners-course/", "Udemy", "Learn Flutter mobile programming", "4.3", "(2,8k reseñas)", "https://img-c.udemycdn.com/course/240x135/1632804_aa69_4.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Flutter - Intermediate", "https://www.udemy.com/course/flutter-intermediate/", "Udemy", "Learn Flutter mobile programming", "4.5", "(1k reseñas)", "https://img-c.udemycdn.com/course/240x135/1632804_aa69_4.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("iOS 11 & Swift 4 - The Complete iOS App Development Bootcamp", "https://www.udemy.com/course/ios11-app-development-bootcamp/", "Udemy", "Learn iOS 11 App Development From Beginning to End. Using Xcode 9 and Swift 4. Includes Full ARKit and CoreML Modules!", "4.3", "(31,6k reseñas)", "https://img-c.udemycdn.com/course/240x135/1289478_5831_10.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("iOS & Swift - The Complete iOS App Development Bootcamp", "https://www.udemy.com/course/ios-13-app-development-bootcamp/", "Udemy", "From Beginner to iOS App Developer with Just One Course! Fully Updated with a Comprehensive Module Dedicated to SwiftUI!", "4.8", "(81,8k reseñas)", "https://img-c.udemycdn.com/course/240x135/1778502_f4b9_12.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("iOS & Swift: Become An App Developer", "https://www.udemy.com/course/devslopes-ios12/", "Udemy", "Beginner's Guide to Learn iOS, Swift, ARKit, CoreML, App Design, Advanced Programming and Much More", "4.7", "(1,8k reseñas)", "https://img-c.udemycdn.com/course/240x135/1862678_f22b_8.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("The Complete React Native + Hooks Course", "https://www.udemy.com/course/the-complete-react-native-and-redux-course/", "Udemy", "Understand React Native with Hooks, Context, and React Navigation.", "4.6", "(42,3k reseñas)", "https://img-c.udemycdn.com/course/240x135/959700_8bd2_11.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Create Your First React Native App", "https://www.udemy.com/course/create-your-first-react-native-app/", "Udemy", "A crash course in building your first React Native app in a weekend or less!", "4.4", "(1,0k reseñas)", "https://img-c.udemycdn.com/course/240x135/1137808_8790_2.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("React Native - The Practical Guide [2023]", "https://www.udemy.com/course/react-native-the-practical-guide/", "Udemy", "Use React Native and your React knowledge to build native iOS and Android Apps - incl. Push Notifications, Hooks, Redux", "4.7", "(30,5k reseñas)", "https://img-c.udemycdn.com/course/240x135/1436092_2024_4.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Complete C# Unity Game Developer 2D", "https://www.udemy.com/course/unitycourse/", "Udemy", "Learn Unity in C# & Code Your First Five 2D Video Games for Web, Mac & PC. The Tutorials Cover Tilemap", "4.7", "(96,9k reseñas)", "https://img-c.udemycdn.com/course/240x135/258316_55e9_12.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Learn Blender 3D Modeling for Unity Video Game Development", "https://www.udemy.com/course/learn-blender-3d-modeling-for-unity-video-game-development/", "Udemy", "Learn to Create or Edit Props, Design Levels, Apply Material and Simple Animations using Blender 3D for Unity Developers", "4.7", "(1,9k reseñas)", "https://img-c.udemycdn.com/course/240x135/625846_e25b.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("The Beginner's Guide to Animation in Unity (v5 to v2020+)", "https://www.udemy.com/course/mastering-3d-animation-in-unity/", "Udemy", "Your ultimate guide to Unity's Mecanim covering keyframes, curves, inverse kinematics, strafe sets, blending and more.", "4.6", "(1,8k reseñas)", "https://img-c.udemycdn.com/course/240x135/878522_636d_6.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("The Complete Python/PostgreSQL Course 2.0", "https://www.udemy.com/course/complete-python-postgresql-database-course/?altsc=781502", "Udemy", "Take the next step in your Python development by leveraging the power of PostgreSQL and databases!", "4.5", "(1,5k reseñas)", "https://img-c.udemycdn.com/course/240x135/781502_305d_4.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Create a web application with python + Django + PostgreSQL", "https://www.udemy.com/course/create-a-web-application-with-python-django-postgresql/", "Udemy", "Build a web application that interacts with a database.", "4.2", "(0,5k reseñas)", "https://img-c.udemycdn.com/course/240x135/1067762_57ae.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("SQL & PostgreSQL for Beginners: Become an SQL Expert", "https://www.udemy.com/course/sql-and-postgresql-for-beginners/", "Udemy", "SQL & PostgreSQL Tutorial: Become an Expert in SQL and PostgreSQL by Writing SQL Queries using PostgreSQL and PgAdmin 4.", "4.6", "(5,6k reseñas)", "https://img-c.udemycdn.com/course/240x135/1272712_2a82_13.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("The Complete SQL and MySQL Course - From Beginner to Expert", "https://www.udemy.com/course/introduction-to-sql23/", "Udemy", "Learn the Basics of Managing Data with SQL - Basics, Transactions, Views, Pages and Stored Procedures", "4.4", "(1,1k reseñas)", "https://img-c.udemycdn.com/course/240x135/570072_f3e5_2.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("The Complete MySQL Developer Course", "https://www.udemy.com/course/the-complete-mysql-developer-course/", "Udemy", "MySQL: Learn how to use MySQL and PHP to build Reports and work with Databases for Web Applications", "4.6", "(3,5k reseñas)", "https://img-c.udemycdn.com/course/240x135/785066_3966_3.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("SQL Course For Beginners: Learn SQL Using MySQL Database", "https://www.udemy.com/course/sqlcourse/", "Udemy", "Learn SQL From Scratch Using MySQL Databases, A Complete SQL Course For Beginners", "4.7", "(1,7k reseñas)", "https://img-c.udemycdn.com/course/240x135/839144_281a_7.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Docker Crash Course for busy DevOps and Developers", "https://www.udemy.com/course/docker-tutorial-for-devops-run-docker-containers/", "Udemy", "Learn how to develop and deploy web applications with Docker technologies. Take your DevOps skills to the next level.", "4.4", "(14,1k reseñas)", "https://img-c.udemycdn.com/course/240x135/714724_b3b4_9.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Docker Mastery: with Kubernetes +Swarm from a Docker Captain", "https://www.udemy.com/course/docker-mastery/", "Udemy", "Build, test, deploy containers with the best mega-course on Docker, Kubernetes, Compose, Swarm and Registry using DevOps", "4.6", "(57,3k reseñas)", "https://img-c.udemycdn.com/course/240x135/1035000_c1aa_6.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Docker for Java Developers", "https://www.udemy.com/course/docker-for-java-developers/", "Udemy", "Learn how you can use Docker to supercharge your enterprise Java Development!", "4.4", "(2,8k reseñas)", "https://img-c.udemycdn.com/course/240x135/1121254_5463_3.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("The Complete DevOps Engineer Course 2.0 - Java & Kubernetes", "https://www.udemy.com/course/the-complete-devops-engineer-course-20-java-kubernetes/", "Udemy", "Learn how to program in Java and build scalable web applications using Kubernetes with Google Cloud platform", "4.6", "(1,0k reseñas)", "https://img-c.udemycdn.com/course/240x135/921474_f542_3.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Understanding TypeScript - 2023 Edition", "https://www.udemy.com/course/understanding-typescript/", "Udemy", "Boost your JavaScript projects with TypeScript: Learn all about core types, generics, TypeScript + React or Node & more!", "4.7", "(38,3k reseñas)", "https://img-c.udemycdn.com/course/240x135/947098_02ec_2.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Typescript Bootcamp: Beginner To Advanced (2023 Edition)", "https://www.udemy.com/course/complete-typescript-2-course/", "Udemy", "Learn Typescript theory in depth, then apply it in practical projects: Node REST API with Express, TypeORM and more", "4.6", "(1,0k reseñas)", "https://img-c.udemycdn.com/course/240x135/947098_02ec_2.jpg");
+    INSERT INTO courses (titulo, url, proveedor, habilidades, rating, resenias, imagen) VALUES ("Introduction to TypeScript Development", "https://www.udemy.com/course/introduction-typescript-development/", "Udemy", "Get ready to build React, Vue and Angular web and mobile applications by learning the TypeScript programming language.", "4.4", "(3,4k reseñas)", "https://img-c.udemycdn.com/course/240x135/999200_ae6d_4.jpg");
