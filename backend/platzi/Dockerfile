@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY package*.json ./
 
-ENV MONGODB_URI=mongodb://mongo-academy-1:27017
+ENV MONGODB_HOST=mongo-academy-1
 
 ENV PORT=3100
 
