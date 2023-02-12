@@ -3,7 +3,7 @@ const router = Router();
 
 const pool = require('../databases/mariadb');
 
-router.get('/', (req, res) => res.json({ message: 'Helo world' }));
+router.get('/', (req, res) => res.json({ message: 'Api Working!' }));
 
 router.get('/products', async (req, res) => {
     try {

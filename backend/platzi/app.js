@@ -22,10 +22,6 @@ app.get("/courses", async (req, res) => {
   }
 })
 
-// app.get('/cursos', (req, res) => {
-
-// });
-
 
 app.listen(port, () => {
   console.log(`Servidor corriendo en el puerto ${port}`)
