@@ -2,9 +2,9 @@ const { Router } = require('express')
 const router = Router()
 const { getAll, searchCourses, getCoursesByRating, coursesByCategory, coursesByDifficulty } = require('../helpers')
 
-const platziUrl = process.env.PLATZI_URL
-const udemyUrl = process.env.UDEMY_URL
-const courseraUrl = process.env.COURSERA_URL
+const platziUrl = `http://${process.env.PLATZI_HOST}:${process.env.PLATZI_PORT}/courses`
+const udemyUrl = `http://${process.env.UDEMY_HOST}:${process.env.UDEMY_PORT}/courses`
+const courseraUrl = `http://${process.env.COURSERA_HOST}:${process.env.COURSERA_PORT}/courses`
 
 router.get('/', (req, res) => res.json({ message: 'Api Working!' }))
 
