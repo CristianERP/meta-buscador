@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 
-const URI = process.env.MONGODB_URI
+const URI = `mongodb://${process.env.MONGODB_HOST}:27017`
 mongoose.set("strictQuery", false)
 mongoose
   .connect(URI, {
