@@ -1,7 +1,7 @@
 const app = require('./app');
 
 async function main() {
-    await app.listen(5000);
+    await app.listen(process.env.PORT);
     console.log('Server is running')
 }
 
