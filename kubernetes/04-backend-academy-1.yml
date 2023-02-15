@@ -5,7 +5,7 @@ metadata:
   labels:
     app: backend-academy-1
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: backend-academy-1
@@ -32,6 +32,21 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: backend-academy-1-cluster-service
+spec:
+  type: ClusterIP
+  selector:
+    app: backend-academy-1
+  ports:
+    - protocol: TCP
+      port: 3100
+      targetPort: 3100
+
+# Se usa para verificar que la api
+---
+apiVersion: v1
+kind: Service
+metadata:
   name: backend-academy-1-service 
 spec:
   type: NodePort
@@ -42,16 +57,3 @@ spec:
       port: 3100
       targetPort: 3100
       nodePort: 30100
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: backend-academy-1-cluster-service
-spec:
-  type: ClusterIP
-  selector:
-    app: backend-academy-1
-  ports:
-    - protocol: TCP
-      port: 3100
-      targetPort: 3100
